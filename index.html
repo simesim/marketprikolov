@@ -26,8 +26,9 @@
             border: 10px solid #ffd700;
             box-shadow: 0 0 40px rgba(255,180,0,0.6), 0 0 80px rgba(255,100,0,0.3);
             touch-action: none;
-            max-width: 100%;
-            max-height: 100vh;
+            max-width: calc(100vw - 10px);
+            max-height: calc(100vh - 10px);
+            display: block;
         }
 
         #screens {
@@ -240,6 +241,58 @@
             transition: transform 0.1s;
         }
         .proceed-btn:hover { transform: scale(1.06); }
+
+        /* ── ADAPTIVE ── */
+        @media (max-width: 540px) {
+            .screen { width: 96vw; }
+
+            #agreement { padding: 20px 14px; border-width: 6px; }
+            .agreement-box { padding: 16px 10px; border-width: 4px; }
+            #agreement h1 { font-size: 13px; line-height: 1.7; margin-bottom: 14px; }
+            #agreement button { font-size: 12px; padding: 12px 24px; }
+
+            #character-select, #transport-select { padding: 16px 10px; border-width: 6px; }
+            #character-select .inner-box,
+            #transport-select .inner-box { padding: 14px 8px; border-width: 4px; }
+            #character-select h1, #transport-select h1 { font-size: 13px; margin-bottom: 12px; }
+
+            .char-grid { grid-template-columns: repeat(5,1fr); gap: 6px; }
+            .char-card { padding: 6px 3px; border-width: 3px; }
+            .char-card .preview canvas { width: 44px !important; height: 52px !important; }
+            .char-card .name { font-size: 8px; }
+
+            .trans-grid { grid-template-columns: repeat(3,1fr); gap: 7px; }
+            .trans-card { padding: 10px 5px 7px; border-width: 3px; }
+            .trans-card .trans-icon { font-size: 32px; height: 42px; }
+            .trans-card .trans-name { font-size: 9px; }
+            .trans-card .trans-desc { font-size: 8px; min-height: 22px; }
+
+            #start { padding: 22px 14px; border-width: 6px; }
+            .inner-box { padding: 18px 12px; border-width: 4px; }
+            #start h1 { font-size: 24px; }
+            .market { font-size: 22px; padding: 3px 12px; }
+            .prikolov { font-size: 28px; }
+            #start p { font-size: 10px; }
+            #start .instruction { font-size: 10px; }
+
+            #gameover { padding: 18px 16px; border-width: 6px; }
+            #gameover h1 { font-size: 18px; }
+            #gameover p { font-size: 11px; }
+            #gameover button { font-size: 12px; padding: 12px 20px; }
+
+            canvas { border-width: 5px; }
+        }
+
+        @media (max-height: 680px) {
+            #agreement { padding: 14px 14px; }
+            .agreement-box { padding: 12px 10px; }
+            #agreement h1 { font-size: 12px; margin-bottom: 10px; }
+            #character-select .inner-box,
+            #transport-select .inner-box { padding: 10px 8px; }
+            .char-card .preview canvas { width: 40px !important; height: 48px !important; }
+            .trans-card .trans-icon { font-size: 28px; height: 36px; }
+            #gameover { padding: 14px 16px; }
+        }
     </style>
 </head>
 <body>
@@ -339,7 +392,7 @@
         <div id="gameover" class="screen">
             <h1>ОЙ, ВРЕЗАЛСЯ!</h1>
             <p>Не грусти, дорога до<br>Маркет Арки<br>не такая сложная...</p>
-            <p style="font-size:18px; margin:16px 0;">Приходи к нам в любой день<br><a href="https://t.me/market_arka" target="_blank">Наш тг</a></p>
+            <p style="font-size:18px; margin:16px 0;">Приходи к нам в любой день<br><a href="https://t.me/market_arka" target="_blank" style="color:#ff7043;font-weight:bold;text-decoration:none;border-bottom:2px solid #ffd700;">@market_arka</a></p>
             <p style="font-size:18px;">ТК «Сити центр»<br>Ленина 50, Вход №6</p>
             <button onclick="restart()">ЕЩЁ ПОПЫТКА!</button>
         </div>
@@ -803,21 +856,21 @@
         ctx.beginPath(); ctx.moveTo(1,-4); ctx.lineTo(5,1.5); ctx.lineTo(3,-4); ctx.closePath(); ctx.fill();
         ctx.beginPath(); ctx.moveTo(11,-4); ctx.lineTo(7,1.5); ctx.lineTo(11,-3.99); ctx.closePath(); ctx.fill();
 
-        // curly hair — back mass
-        const hg = ctx.createRadialGradient(cx,cy-4,2,cx,cy-4,16);
+        // curly hair — compact, less voluminous
+        const hg = ctx.createRadialGradient(cx,cy-6,2,cx,cy-4,13);
         hg.addColorStop(0,'#cba84a'); hg.addColorStop(1,'#9a7828');
         ctx.fillStyle=hg;
-        ctx.beginPath(); ctx.ellipse(cx,cy-2,15,16,0,0,Math.PI*2); ctx.fill();
-        // curl blobs around perimeter
+        ctx.beginPath(); ctx.ellipse(cx,cy-3,12,13,0,0,Math.PI*2); ctx.fill();
+        // smaller curl blobs, tighter radius
         const CP=[
-            [cx-13,cy-10,5.5,'#b8942a'],[cx-8,cy-18,6,'#cba84a'],[cx-1,cy-22,6.5,'#d4b450'],
-            [cx+6, cy-20,6,'#cba84a'], [cx+12,cy-14,5.5,'#b8942a'],[cx+16,cy-5,5,'#a88028'],
-            [cx+14,cy+4, 4.5,'#b89038'],[cx-13,cy-1,4.5,'#a88028']
+            [cx-10,cy-9, 4.0,'#b8942a'],[cx-5, cy-15,4.5,'#cba84a'],[cx+1, cy-17,4.8,'#d4b450'],
+            [cx+7, cy-15,4.2,'#cba84a'],[cx+11,cy-10,4.0,'#b8942a'],[cx+13,cy-3, 3.8,'#a88028'],
+            [cx+11,cy+3, 3.5,'#b89038'],[cx-10,cy-1, 3.5,'#a88028']
         ];
         for(const[x,y,r,c2]of CP){
             ctx.fillStyle=c2; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
-            ctx.fillStyle='rgba(255,235,150,0.22)';
-            ctx.beginPath(); ctx.arc(x-1,y-1.5,r*0.55,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle='rgba(255,235,150,0.2)';
+            ctx.beginPath(); ctx.arc(x-0.8,y-1.2,r*0.5,0,Math.PI*2); ctx.fill();
         }
 
         hFace(ctx,cx,cy,13,14,'#f5cba7');
@@ -1323,7 +1376,7 @@
             pc.fillStyle='#7e57c2';pc.beginPath();pc.roundRect(-8,-4,28,22,4);pc.fill();
             pc.fillStyle='#f0ece0';pc.beginPath();pc.roundRect(1,-4,10,7,2);pc.fill();
             pc.fillStyle='#b89540';pc.beginPath();pc.ellipse(cx,cy-2,15,16,0,0,Math.PI*2);pc.fill();
-            const CP=[[cx-13,cy-10,5.5],[cx-8,cy-18,6],[cx-1,cy-22,6.5],[cx+6,cy-20,6],[cx+12,cy-14,5.5],[cx+16,cy-5,5],[cx+14,cy+4,4.5],[cx-13,cy-1,4.5]];
+            const CP=[[cx-10,cy-9,4.0],[cx-5,cy-15,4.5],[cx+1,cy-17,4.8],[cx+7,cy-15,4.2],[cx+11,cy-10,4.0],[cx+13,cy-3,3.8],[cx+11,cy+3,3.5],[cx-10,cy-1,3.5]];
             pc.fillStyle='#a07830';for(const[x,y,r]of CP){pc.beginPath();pc.arc(x,y,r,0,Math.PI*2);pc.fill();}
             pc.fillStyle='#c8a045';for(const[x,y,r]of CP){pc.beginPath();pc.arc(x-1,y-1.5,r*.55,0,Math.PI*2);pc.fill();}
             pFace(cx,cy,13,14,'#f5cba7');pBrows(cx,cy-9,'#7a5a1e','m');pEyes(cx,cy-4.5,false);pNose(cx,cy+2);pMouth(cx,cy+8.5);pMustache(cx,cy+4.5);
